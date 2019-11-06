@@ -3,7 +3,8 @@ const router = require('koa-router')()
 const {
     register,
     login,
-    updateUserInfo
+    updateUserInfo,
+    getUserList
 } = require('../controller/users.js')
 
 const {
@@ -100,32 +101,14 @@ router.post('/updateUserInfo', async function (ctx, next) {
     return new ErrorModel('用户名或密码错误!')
 })
 
-router.get('/test', async (ctx, next) => {
-    let token = ctx.request.header.authorization;
-    if (token) {
-        //  获取到token
-        let toke = token.split(' ')[1]
-        // 解析
-        let decoded = jwt.decode(toke, SECRET_KEY)
+router.post('/updateUserAvatar', async function(ctx, next ) {
+    
+})
 
-        if (decoded && decoded.exp <= new Date() / 1000) {
-            ctx.body = {
-                message: 'token过期',
-                code: 3
-            }
-        } else {
-            ctx.body = {
-                message: '解析成功',
-                code: 1
-            }
-        }
-    } else {
-        // 没有token
-        ctx.body = {
-            msg: '没有token',
-            code: 0
-        }
-    }
-});
+router.get('/userList', async (ctx, next) => {
+    const userListData = await getUserList()
+    console.log(userListData,'userListData')
+    ctx.body = new SuccessModel(userListData, '成功')
+})
 
 module.exports = router

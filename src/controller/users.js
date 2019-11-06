@@ -69,9 +69,19 @@ const updateUserInfo = async (userInfo) => {
     return false
 }
 
+
+const getUserList = async () => {
+
+    const sql = `select userId, userName, avatar, likeCount, commentCount, articleCount, viewCount, isShield from users`
+
+    const rows = await exec(sql)
+    return rows || {}
+}
+
 module.exports = {
     register,
     login,
     getUserDetail,
-    updateUserInfo
+    updateUserInfo,
+    getUserList
 }

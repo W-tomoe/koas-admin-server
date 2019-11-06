@@ -8,8 +8,10 @@ const {
 
 async function checkToken(ctx, next) {
     let url = ctx.request.url;
+
+    console.log(/\/upload/.test(url),url,'url')
     // 登录注册 不用检查
-    if (url == "/api/user/login" || url == "/api/user/register" ) {
+    if (url == "/api/user/login" || url == "/api/user/register" || url == "/api/upload" || /\/upload/.test(url)) {
         await next()
     } else {
         // 规定token写在header 的 'autohrization' 
