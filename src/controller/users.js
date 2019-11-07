@@ -41,9 +41,9 @@ const login = async (username, password) => {
 }
 
 
-const getUserDetail = async (userid) => {
+const getUserDetail = async (userId) => {
     const sql = `
-        select userId, userName, email, avatar, articleCount, likeCount, createTime  from users where userId=${userid}
+        select userId, userName, email, avatar, articleCount, likeCount, createTime  from users where userId=${userId}
     `
     const rows = await exec(sql)
     return rows[0] || {}
@@ -51,15 +51,15 @@ const getUserDetail = async (userid) => {
 
 
 const updateUserInfo = async (userInfo) => {
-    const username = xss(userInfo.username)
+    const userName = xss(userInfo.userName)
     const email = xss(userInfo.email)
 
-    const userid = userInfo.userid
+    const userId = userInfo.userId
 
     const sql = `
-        update users set userName='${username}', email='${email}' where userId=${userid}
+        update users set userName='${userName}', email='${email}' where userId=${userId}
     `
-
+    
     const updateData = await exec(sql)
 
     if (updateData.affectedRows > 0) {
@@ -69,11 +69,8 @@ const updateUserInfo = async (userInfo) => {
     return false
 }
 
-
 const getUserList = async () => {
-
     const sql = `select userId, userName, avatar, likeCount, commentCount, articleCount, viewCount, isShield from users`
-
     const rows = await exec(sql)
     return rows || {}
 }
