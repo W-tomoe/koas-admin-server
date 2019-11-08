@@ -10,7 +10,7 @@ const {
 
 router.post('/api/upload', (ctx, next) => {
     const file = ctx.request.files.file
-    
+    console.log(file,'file')
     //创建可读流
     const reader = fs.createReadStream(file.path)
     let filePath = path.join(__dirname, '../public/upload/') + `/${file.name}`
