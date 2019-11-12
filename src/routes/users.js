@@ -107,7 +107,6 @@ router.post('/updateUserAvatar', async function(ctx, next ) {
 
 router.get('/userList', async (ctx, next) => {
     const userListData = await getUserList()
-    console.log(userListData,'userListData')
     ctx.body = new SuccessModel(userListData, '成功')
 })
 

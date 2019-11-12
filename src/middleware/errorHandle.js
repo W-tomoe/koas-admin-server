@@ -1,7 +1,6 @@
 const { LoginErrorModel } = require('../model/resModel')
 
 const errorHandle = async (ctx, next) => {
-    console.log(ctx)
     return next().catch((err) => {
         if(err.status === 401) {
             ctx.status = 401

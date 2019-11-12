@@ -1,5 +1,5 @@
 class BaseModel {
-    constructor(data, message, ...opt) {
+    constructor(data, message, {...opt}) {
         if (typeof data === 'string') {
             this.message = data
             data = null
@@ -14,29 +14,31 @@ class BaseModel {
             this.message = message
         }
 
-        for(let key in opt) {
-            this[key] = opt[key]
+        if(opt) {
+            for(let key in opt) {
+                this[key] = opt[key]
+            }
         }
     }
 }
 
 
 class SuccessModel extends BaseModel {
-    constructor(data, message) {
-        super(data, message)
+    constructor(data, message, opt) {
+        super(data, message, opt)
         this.status = 1
     }
 }
 
 class ErrorModel extends BaseModel {
-    constructor(data, message) {
-        super(data, message)
+    constructor(data, message, opt) {
+        super(data, message, opt)
         this.status = 0
     }
 }
 
 class LoginErrorModel extends BaseModel {
-    constructor(data, message) {
+    constructor(data, message, opt) {
         super(data, message)
         this.status = -1
     }

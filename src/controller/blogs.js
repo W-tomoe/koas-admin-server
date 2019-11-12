@@ -1,53 +1,78 @@
-const { exec, escape } = require('../db/mysql')
+const { exec, escape, unescape } = require('../db/mysql')
 
 
-const newBlog = async(title,content,blogType,showImg,userId) => {
+const newBlog = async(title,content,showImg,userId) => {
     
     title =  escape(title)
     content =  escape(content)
-    
-    const userSql = `select userName,avatar,email from users where userId=${userId}`
+    const userSql = `SELECT userName,avatar,email FROM users WHERE userId=${userId}`
     const userDate = await exec(userSql)
     const { userName, avatar, email } = userDate[0]
 
-    const sql = `insert into blogs(title, content, showImg, blogType, userId, userName, avatar)
-    values(${title}, ${content}, '${showImg}', ${blogType}, ${userId}, '${userName}', '${avatar || ""}')`
+    
+
+    const sql = `INSERT INTO blogs(title, showImg, content, userId, userName, avatar)
+    VALUES(${title}, '${showImg}', ${content}, ${userId}, '${userName}', '${avatar}')`
+
 
     const rows = await exec(sql)
     
     if (rows.affectedRows > 0) {
         return true
     }
-
     return false
 }
 
 const getBlogsList = async ({...serchParams}) => {
-    const sql = `select * from blogs where 1=1`
 
-    const { author = '', keyword = '', blogType = '', beginDateStr = '', endDateStr = '',userId = '' } = serchParams
-
+    const { 
+        author = '', 
+        keyword = '', 
+        blogType = '', 
+        beginDateStr = '', 
+        endDateStr = '',
+        userId = '', 
+        limit, 
+        page 
+    } = serchParams
+    
+    let sql = `SELECT * FROM blogs  where 1=1 `
+    const totalSql = 'SELECT count(*) as total FROM blogs'
     if(author) {
-        sql += `and author='${author}'`
+        sql += `AND author='${author}'`
     }
 
     if(keyword) {
-        sql+=  `and keyword='%${keyword}%'`
+        sql+=  `AND keyword='%${keyword}%'`
     }
 
     if(blogType) {
-        sql+=  `and blogType='${blogType}'`
+        sql+=  `AND blogType='${blogType}'`
     }
 
     if(beginDateStr) {
-        sql+=  `and beginDateStr='${beginDateStr}'`
+        sql+=  `AND beginDateStr='${beginDateStr}'`
     }
 
     if(endDateStr) {
-        sql+=  `and beginDateStr='${endDateStr}'`
+        sql+=  `AND beginDateStr='${endDateStr}' `
     }
+    
 
-    return await exec(sql)
+    sql+= `LIMIT ${(page-1)*limit},${(page-1)*limit + limit}`
+
+    
+    const total = await exec(totalSql)
+    const blogsData = await exec(sql)
+
+    return Promise.resolve({
+        data: blogsData,
+        pages: {
+            page: page,
+            limit: limit,
+            total: total[0].total
+        }
+    })
 }
 
 
@@ -90,7 +115,6 @@ const deleteBlog = async (id) => {
 
 
     const delData = await exec(sql)
-    console.log(delData,delData.affectedRows,'delData')
     if(delData.affectedRows > 0) {
         return true
     }

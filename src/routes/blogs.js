@@ -16,25 +16,25 @@ router.prefix('/api/blog')
 
 
 router.post('/new', async(ctx, next) => {
-    const { title = '', content = '',blogType , userId = '', showImg = '' } = ctx.request.body
+    const { title = '', content = '', userId = '', showImg = '' } = ctx.request.body
     
     if(!title) {
         return ctx.body = new ErrorModel('文章标题不能为空')
+    }
+
+    if(!showImg) {
+        return ctx.body = new ErrorModel('请上传封面')
     }
 
     if(!content) {
         return ctx.body = new ErrorModel('文章内容不能为空')
     }
 
-    if(!blogType) {
-        return ctx.body = new ErrorModel('缺少分类')
-    }
-
     if(!userId) {
         return ctx.body = new ErrorModel('作者id不能为空')
     }
 
-    const data = await newBlog(title, content, blogType, showImg, userId)
+    const data = await newBlog(title, content, showImg, userId)
     
     if(data) {
         ctx.body = new SuccessModel('新建成功')
@@ -50,19 +50,24 @@ router.get('/list',async (ctx, next) => {
     let blogType = ctx.query.blogType || ''
     let beginDateStr = ctx.query.beginDateStr || ''
     let endDateStr = ctx.query.beginDateStr || ''
-    
+    let limit = ctx.query.limit || 10
+    let page = ctx.query.page || 1
+    console.log(limit, page,'limi page')
+    const listData = await getBlogsList(author, keyword, blogType, beginDateStr, endDateStr, limit, page)
 
-    const listData = await getBlogsList(author, keyword, blogType, beginDateStr, endDateStr)
-
-    ctx.body = new SuccessModel(listData)
+    ctx.body = new SuccessModel(listData.data,'成功',listData.pages)
 })
 
 
 router.get('/detail', async(ctx, next) => {
-    const id = ctx.query.id
+    const id = ctx.query.blogId
+    if(!id) {
+        ctx.body = new ErrorModel('缺少blogId参数')
+    }
+
     const blogDetail =await getBlogDetailById(id)
 
-    ctx.body = blogDetail
+    ctx.body = new SuccessModel(blogDetail,'成功')
 })
 
 
