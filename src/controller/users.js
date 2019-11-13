@@ -41,9 +41,9 @@ const login = async (username, password) => {
 }
 
 
-const getUserDetail = async (userId) => {
+const getUserInfoById = async (userId) => {
     const sql = `
-        select userId, userName, email, avatar, articleCount, likeCount, createTime  from users where userId=${userId}
+        select userId, userName, email, avatar, signature,isShield, articleCount, likeCount,viewCount, createTime  from users where userId=${userId}
     `
     const rows = await exec(sql)
     return rows[0] || {}
@@ -78,7 +78,7 @@ const getUserList = async () => {
 module.exports = {
     register,
     login,
-    getUserDetail,
+    getUserInfoById,
     updateUserInfo,
     getUserList
 }

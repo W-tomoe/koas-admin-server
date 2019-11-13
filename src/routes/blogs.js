@@ -52,10 +52,10 @@ router.get('/list',async (ctx, next) => {
     let endDateStr = ctx.query.beginDateStr || ''
     let limit = ctx.query.limit || 10
     let page = ctx.query.page || 1
-    console.log(limit, page,'limi page')
+    
     const listData = await getBlogsList(author, keyword, blogType, beginDateStr, endDateStr, limit, page)
-
-    ctx.body = new SuccessModel(listData.data,'成功',listData.pages)
+    
+    ctx.body = new SuccessModel(listData.data,'成功',{pages:listData.pages})
 })
 
 

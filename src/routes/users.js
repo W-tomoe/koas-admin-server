@@ -3,6 +3,7 @@ const router = require('koa-router')()
 const {
     register,
     login,
+    getUserInfoById,
     updateUserInfo,
     getUserList
 } = require('../controller/users.js')
@@ -78,10 +79,10 @@ router.post('/login', async function (ctx, next) {
     ctx.body = new ErrorModel('用户名或密码错误!')
 })
 
-router.get('/getUserDetail', async function (ctx, next) {
-    const userid = ctx.query.userid
+router.get('/getUserInfoById', async function (ctx, next) {
+    const userId = ctx.query.userId
 
-    const data = await getUserDetail(userid)
+    const data = await getUserInfoById(userId)
 
     if (data) {
         ctx.body = new SuccessModel(data, '获取成功')

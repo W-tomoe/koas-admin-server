@@ -23,19 +23,8 @@ const newBlog = async(title,content,showImg,userId) => {
     return false
 }
 
-const getBlogsList = async ({...serchParams}) => {
+const getBlogsList = async (author, keyword, blogType, beginDateStr, endDateStr, limit, page) => {
 
-    const { 
-        author = '', 
-        keyword = '', 
-        blogType = '', 
-        beginDateStr = '', 
-        endDateStr = '',
-        userId = '', 
-        limit, 
-        page 
-    } = serchParams
-    
     let sql = `SELECT * FROM blogs  where 1=1 `
     const totalSql = 'SELECT count(*) as total FROM blogs'
     if(author) {
@@ -55,12 +44,11 @@ const getBlogsList = async ({...serchParams}) => {
     }
 
     if(endDateStr) {
-        sql+=  `AND beginDateStr='${endDateStr}' `
+        sql+=  `AND beginDateStr='${endDateStr}' order by createTime desc `
     }
     
-
-    sql+= `LIMIT ${(page-1)*limit},${(page-1)*limit + limit}`
-
+    sql+= `limit ${(page-1)*limit},${(page-1)*limit + limit}`
+    
     
     const total = await exec(totalSql)
     const blogsData = await exec(sql)
