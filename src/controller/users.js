@@ -70,9 +70,22 @@ const updateUserInfo = async (userInfo) => {
 }
 
 const getUserList = async () => {
-    const sql = `select userId, userName, avatar, likeCount, commentCount, articleCount, viewCount, isShield from users`
+    const sql = `select userId, userName, avatar, signature, likeCount,email, commentCount, articleCount, viewCount, isShield from users`
     const rows = await exec(sql)
     return rows || {}
+}
+
+// 修改密码
+const changePassword = async (userId, oldPassword,newPassword) => {
+    oldPassword = escape(oldPassword)
+    newPassword = escape(newPassword)
+    const sql = `select password from users where userId=${userId}`
+}
+
+
+// 重置密码（忘记密码）
+const resetPassword  = async () => {
+
 }
 
 module.exports = {

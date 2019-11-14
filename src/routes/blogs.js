@@ -45,6 +45,7 @@ router.post('/new', async(ctx, next) => {
 })
 
 router.get('/list',async (ctx, next) => {
+    let userId = ctx.query.userId || ''
     let author = ctx.query.author || ''
     let keyword = ctx.query.keyword || ''
     let blogType = ctx.query.blogType || ''
@@ -53,7 +54,7 @@ router.get('/list',async (ctx, next) => {
     let limit = ctx.query.limit || 10
     let page = ctx.query.page || 1
     
-    const listData = await getBlogsList(author, keyword, blogType, beginDateStr, endDateStr, limit, page)
+    const listData = await getBlogsList(userId, author, keyword, blogType, beginDateStr, endDateStr, limit, page)
     
     ctx.body = new SuccessModel(listData.data,'成功',{pages:listData.pages})
 })

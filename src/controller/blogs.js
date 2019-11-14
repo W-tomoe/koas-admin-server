@@ -23,10 +23,15 @@ const newBlog = async(title,content,showImg,userId) => {
     return false
 }
 
-const getBlogsList = async (author, keyword, blogType, beginDateStr, endDateStr, limit, page) => {
+const getBlogsList = async (userId, author, keyword, blogType, beginDateStr, endDateStr, limit, page) => {
 
     let sql = `SELECT * FROM blogs  where 1=1 `
-    const totalSql = 'SELECT count(*) as total FROM blogs'
+    const totalSql = 'SELECT count(*) as total FROM blogs where 1=1'
+
+    if(userId) {
+        sql+=  `AND userId='${userId}'`
+    }
+
     if(author) {
         sql += `AND author='${author}'`
     }
@@ -39,13 +44,25 @@ const getBlogsList = async (author, keyword, blogType, beginDateStr, endDateStr,
         sql+=  `AND blogType='${blogType}'`
     }
 
-    if(beginDateStr) {
-        sql+=  `AND beginDateStr='${beginDateStr}'`
+    // if(beginDateStr) {
+    //     sql+=  `AND beginDateStr='${beginDateStr}'`
+    // }
+
+    // if(endDateStr) {
+    //     sql+=  `AND beginDateStr='${endDateStr}' order by createTime desc `
+    // }
+    if(beginDateStr || endDateStr) {
+        if(beginDateStr) {
+            sql+=  `AND createTime>='${beginDateStr}' `
+        }
+
+        if(endDateStr) {
+            sql+=  `AND createTime<='${endDateStr}' `
+        }
+    }else {
+        sql+=  `AND createTime between '${beginDateStr}' AND '${endDateStr}' `
     }
 
-    if(endDateStr) {
-        sql+=  `AND beginDateStr='${endDateStr}' order by createTime desc `
-    }
     
     sql+= `limit ${(page-1)*limit},${(page-1)*limit + limit}`
     
