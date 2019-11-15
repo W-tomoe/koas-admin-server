@@ -29,43 +29,33 @@ const getBlogsList = async (userId, author, keyword, blogType, beginDateStr, end
     const totalSql = 'SELECT count(*) as total FROM blogs where 1=1'
 
     if(userId) {
-        sql+=  `AND userId='${userId}'`
+        sql+=  `AND userId='${userId}' `
     }
 
     if(author) {
-        sql += `AND author='${author}'`
+        sql += `AND userName='${author}' `
     }
 
     if(keyword) {
-        sql+=  `AND keyword='%${keyword}%'`
+        sql+=  `AND keyword='%${keyword}%' `
     }
 
     if(blogType) {
-        sql+=  `AND blogType='${blogType}'`
+        sql+=  `AND blogType='${blogType}' `
     }
 
-    // if(beginDateStr) {
-    //     sql+=  `AND beginDateStr='${beginDateStr}'`
-    // }
-
-    // if(endDateStr) {
-    //     sql+=  `AND beginDateStr='${endDateStr}' order by createTime desc `
-    // }
-    if(beginDateStr || endDateStr) {
-        if(beginDateStr) {
-            sql+=  `AND createTime>='${beginDateStr}' `
+    
+    if(beginDateStr &&  endDateStr) {
+        if(beginDateStr === endDateStr) {
+            beginDateStr = beginDateStr + ' 00:00:00'
+            endDateStr = endDateStr + ' 23:59:59'
         }
-
-        if(endDateStr) {
-            sql+=  `AND createTime<='${endDateStr}' `
-        }
-    }else {
         sql+=  `AND createTime between '${beginDateStr}' AND '${endDateStr}' `
     }
 
     
     sql+= `limit ${(page-1)*limit},${(page-1)*limit + limit}`
-    
+    console.log(sql,'sql')
     
     const total = await exec(totalSql)
     const blogsData = await exec(sql)
