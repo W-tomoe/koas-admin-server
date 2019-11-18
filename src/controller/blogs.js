@@ -50,13 +50,14 @@ const getBlogsList = async (userId, author, keyword, blogType, beginDateStr, end
             beginDateStr = beginDateStr + ' 00:00:00'
             endDateStr = endDateStr + ' 23:59:59'
         }
+        
         sql+=  `AND createTime between '${beginDateStr}' AND '${endDateStr}' `
     }
 
-    
+    sql += ` ORDER BY createTime DESC `
+
     sql+= `limit ${(page-1)*limit},${(page-1)*limit + limit}`
     console.log(sql,'sql')
-    
     const total = await exec(totalSql)
     const blogsData = await exec(sql)
 

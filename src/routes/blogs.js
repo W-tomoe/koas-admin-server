@@ -50,7 +50,7 @@ router.get('/list',async (ctx, next) => {
     let keyword = ctx.query.keyword || ''
     let blogType = ctx.query.blogType || ''
     let beginDateStr = ctx.query.beginDateStr || ''
-    let endDateStr = ctx.query.beginDateStr || ''
+    let endDateStr = ctx.query.endDateStr || ''
     let limit = ctx.query.limit || 10
     let page = ctx.query.page || 1
     
