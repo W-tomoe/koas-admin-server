@@ -8,16 +8,15 @@ const newBlog = async(title,content,showImg,userId) => {
     const userSql = `SELECT userName,avatar,email FROM users WHERE userId=${userId}`
     const userDate = await exec(userSql)
     const { userName, avatar, email } = userDate[0]
-
     
-
     const sql = `INSERT INTO blogs(title, showImg, content, userId, userName, avatar)
     VALUES(${title}, '${showImg}', ${content}, ${userId}, '${userName}', '${avatar}')`
-
 
     const rows = await exec(sql)
     
     if (rows.affectedRows > 0) {
+        const updateACSql = `update users set articleCount=articleCount+'1' where userId=${userId}`
+        exec(updateACSql)
         return true
     }
     return false
@@ -105,13 +104,16 @@ const updateBlog = async (...updateInfo) => {
 }
 
 
-const deleteBlog = async (id) => {
+const deleteBlog = async (userId,blogId) => {
     
-    const sql = `delete from blogs where blogId=${id}`
+    const sql = `delete from blogs where blogId=${blogId}`
 
 
     const delData = await exec(sql)
     if(delData.affectedRows > 0) {
+        const updateACSql = `update users set articleCount=articleCount-'1' where userId=${userId}`
+        exec(updateACSql)
+
         return true
     }
     return false

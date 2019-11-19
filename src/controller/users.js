@@ -33,17 +33,16 @@ const login = async (username, password) => {
 
     password = escape(password)
     
-    const sql = `
-        select userName, userId, email, avatar from users where userName=${username} or email=${username} and password=${password}
-    `
+    const sql = `select userName, userId, email, avatar from users where userName=${username} or email=${username} and password=${password}`
     const rows = await exec(sql)
+    console.log(rows,username,password,'rows')
     return rows[0] || {}
 }
 
 
 const getUserInfoById = async (userId) => {
     const sql = `
-        select userId, userName, email, avatar, signature,isShield, articleCount, likeCount,viewCount, createTime  from users where userId=${userId}
+        select userId, userName, email, avatar, signature,isShield, articleCount, likeCount, commentCount, viewCount, createTime  from users where userId=${userId}
     `
     const rows = await exec(sql)
     return rows[0] || {}

@@ -98,8 +98,8 @@ router.post('/update',async (ctx, next) => {
 
 
 router.post('/delete', async(ctx, next) => {
-    const { blogId } = ctx.request.body
-    const delData = await deleteBlog(blogId)
+    const { blogId, userId } = ctx.request.body
+    const delData = await deleteBlog(userId,blogId)
     if(delData) {
         return ctx.body = new SuccessModel('删除成功')
     }
