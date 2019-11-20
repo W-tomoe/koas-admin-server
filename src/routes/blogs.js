@@ -15,6 +15,7 @@ const {
 router.prefix('/api/blog')
 
 
+
 router.post('/new', async(ctx, next) => {
     const { title = '', content = '', userId = '', showImg = '' } = ctx.request.body
     
@@ -73,7 +74,7 @@ router.get('/detail', async(ctx, next) => {
 
 
 router.post('/update',async (ctx, next) => {
-    const { blogId='', title='', content='', blogType=1, showImg=''} = ctx.request.body
+    const { blogId='', title='', content='', blogType = 1, showImg=''} = ctx.request.body
     
     if(!title) {
         return ctx.body = new ErrorModel('标题不能为空!')

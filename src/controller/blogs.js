@@ -56,7 +56,6 @@ const getBlogsList = async (userId, author, keyword, blogType, beginDateStr, end
     sql += ` ORDER BY createTime DESC `
 
     sql+= `limit ${(page-1)*limit},${(page-1)*limit + limit}`
-    console.log(sql,'sql')
     const total = await exec(totalSql)
     const blogsData = await exec(sql)
 
@@ -87,7 +86,7 @@ const updateBlog = async (...updateInfo) => {
     content = escape(content)
 
     let sql = `
-        update blogs set title=${title}, content=${content}, blogType=${blogType}
+        update blogs set title=${title}, content=${content}
     `
     if(showImg) {
         sql += `showImg='${showImg}' `
