@@ -1,3 +1,8 @@
+/*
+ * @Description: 文件上传 路由
+ * @Author: Wong
+ * @Date: 2019-11-05 10:39:30
+ */
 const router = require('koa-router')()
 const path = require('path')
 const fs = require('fs')
@@ -18,6 +23,7 @@ router.post('/api/upload', (ctx, next) => {
     const uploadSuccessName = uid + path.extname(file.name)
     const uploadTime = sillyDatetime.format(new Date(), 'YYYY-MM-DD')
 
+    mkdir(`../public/upload/${uploadTime}/`)
     //创建可读流
     const reader = fs.createReadStream(file.path)
     let filePath = path.join(__dirname, `../public/upload/${uploadTime}/`) + `/${uploadSuccessName}`

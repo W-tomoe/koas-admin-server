@@ -1,3 +1,10 @@
+/*
+ * @Description: 文章相关的 路由
+ * @Author: Wong
+ * @Date: 2019-10-30 17:11:25
+ */
+
+
 const router = require('koa-router')()
 const {
     newBlog,
@@ -14,10 +21,8 @@ const {
 
 router.prefix('/api/blog')
 
-
-
 router.post('/new', async(ctx, next) => {
-    const { title = '', content = '', userId = '', showImg = '' } = ctx.request.body
+    const { title = '', domText = '', plainText='', userId = '', showImg = '' } = ctx.request.body
     
     if(!title) {
         return ctx.body = new ErrorModel('文章标题不能为空')
@@ -27,15 +32,15 @@ router.post('/new', async(ctx, next) => {
         return ctx.body = new ErrorModel('请上传封面')
     }
 
-    if(!content) {
-        return ctx.body = new ErrorModel('文章内容不能为空')
+    if(!plainText) {
+        return ctx.body = new ErrorModel('内容不能为空')
     }
 
     if(!userId) {
         return ctx.body = new ErrorModel('作者id不能为空')
     }
 
-    const data = await newBlog(title, content, showImg, userId)
+    const data = await newBlog(title, domText, plainText, showImg, userId)
     
     if(data) {
         ctx.body = new SuccessModel('新建成功')
@@ -74,21 +79,21 @@ router.get('/detail', async(ctx, next) => {
 
 
 router.post('/update',async (ctx, next) => {
-    const { blogId='', title='', content='', blogType = 1, showImg=''} = ctx.request.body
+    const { blogId='', title='', domText='',plainText='', blogType = 1, showImg=''} = ctx.request.body
     
     if(!title) {
         return ctx.body = new ErrorModel('标题不能为空!')
     }
     
-    if(!content) {
-        return ctx.body = new ErrorModel('标题不能为空!')
+    if(!plainText) {
+        return ctx.body = new ErrorModel('内容不能为空!')
     }
 
     if(!blogId) {
         return ctx.body = new ErrorModel('文章id不能为空!')
     }
     
-    const data = await updateBlog( blogId, title, content, blogType, showImg)
+    const data = await updateBlog( blogId, title, domText, plainText, blogType, showImg)
 
     if(data) {
         return ctx.body = new SuccessModel('更新成功')

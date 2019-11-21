@@ -1,3 +1,9 @@
+/*
+ * @Description: 未路由拦截 中间件
+ * @Author: Wong
+ * @Date: 2019-10-29 14:16:04
+ * @LastEditTime: 2019-11-21 16:22:06
+ */
 const { LoginErrorModel } = require('../model/resModel')
 
 const errorHandle = async (ctx, next) => {

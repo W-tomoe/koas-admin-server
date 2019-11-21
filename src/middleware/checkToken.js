@@ -1,3 +1,11 @@
+/*
+ * @Description: token拦截中间件
+ * @Author: Wong
+ * @Date: 2019-10-29 11:53:16
+ * @LastEditTime: 2019-11-21 16:21:37
+ */
+
+
 const jwt = require("jsonwebtoken")
 const Promise = require("bluebird");
 const verify = Promise.promisify(jwt.verify);
@@ -22,7 +30,6 @@ async function checkToken(ctx, next) {
                 await verify(token.split(" ")[1], SECRET_KEY)
                 await next()
             } catch (err) {
-                console.log(err,'err')
                 //过期
                 ctx.body = {
                     data: null,

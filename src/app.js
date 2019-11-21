@@ -19,15 +19,12 @@ const { REDIS_CONF } = require('./conf/db')
 const { SECRET_KEY } = require('./utils/cryp')
 const checkToken = require('./middleware/checkToken')
 
-
 const users = require('./routes/users')
 const blogs = require('./routes/blogs')
 const upload = require('./routes/upload')
 
-
 // error handler
 onerror(app)
-
 
 // 启用cors
 app.use(cors({

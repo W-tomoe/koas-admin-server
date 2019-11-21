@@ -2,9 +2,10 @@ const fs = require('fs')
 const path = require('path')
 
 function mkdir(filepathStr) {
-    if(!fs.existsSync(filepathStr)) {
-        fs.mkdir(path.join(__dirname, filepathStr))
+    const targetPath = path.join(__dirname, filepathStr)
+    if(!fs.existsSync(targetPath)) {
+        fs.mkdirSync(targetPath)
     }
 }
 
-module.exports = mkdir;
+module.exports = mkdir

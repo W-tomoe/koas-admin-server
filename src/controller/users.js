@@ -1,3 +1,10 @@
+/*
+ * @Description: 用户相关 controller
+ * @Author: Wong
+ * @Date: 2019-10-28 14:00:25
+ * @LastEditTime: 2019-11-21 16:29:33
+ */
+
 const { exec, escape } = require('../db/mysql')
 const { genPassword } = require('../utils/cryp')
 const { formatDateTime } = require('../utils/formatDateTime')
@@ -35,7 +42,6 @@ const login = async (username, password) => {
     
     const sql = `select userName, userId, email, avatar from users where userName=${username} or email=${username} and password=${password}`
     const rows = await exec(sql)
-    console.log(rows,username,password,'rows')
     return rows[0] || {}
 }
 
