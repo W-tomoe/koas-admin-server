@@ -22,7 +22,8 @@ const {
 router.prefix('/api/blog')
 
 router.post('/new', async(ctx, next) => {
-    const { title = '', domText = '', plainText='', userId = '', showImg = '' } = ctx.request.body
+    const { title = '', domText = '', plainText='', userId = '', showImg = '', thumbImg='' } = ctx.request.body
+    
     
     if(!title) {
         return ctx.body = new ErrorModel('文章标题不能为空')
@@ -40,7 +41,7 @@ router.post('/new', async(ctx, next) => {
         return ctx.body = new ErrorModel('作者id不能为空')
     }
 
-    const data = await newBlog(title, domText, plainText, showImg, userId)
+    const data = await newBlog(title, domText, plainText, showImg, thumbImg, userId)
     
     if(data) {
         ctx.body = new SuccessModel('新建成功')
@@ -79,7 +80,7 @@ router.get('/detail', async(ctx, next) => {
 
 
 router.post('/update',async (ctx, next) => {
-    const { blogId='', title='', domText='',plainText='', blogType = 1, showImg=''} = ctx.request.body
+    const { blogId='', title='', domText='',plainText='', blogType = 1, showImg='', thumbImg='' } = ctx.request.body
     
     if(!title) {
         return ctx.body = new ErrorModel('标题不能为空!')
@@ -93,7 +94,7 @@ router.post('/update',async (ctx, next) => {
         return ctx.body = new ErrorModel('文章id不能为空!')
     }
     
-    const data = await updateBlog( blogId, title, domText, plainText, blogType, showImg)
+    const data = await updateBlog( blogId, title, domText, plainText, blogType, showImg, thumbImg)
 
     if(data) {
         return ctx.body = new SuccessModel('更新成功')

@@ -2,7 +2,7 @@
  * @Description: token拦截中间件
  * @Author: Wong
  * @Date: 2019-10-29 11:53:16
- * @LastEditTime: 2019-11-21 16:21:37
+ * @LastEditTime: 2019-11-26 18:26:57
  */
 
 
@@ -17,9 +17,8 @@ const {
 async function checkToken(ctx, next) {
     let url = ctx.request.url;
 
-    console.log(/\/upload/.test(url),url,'url')
     // 登录注册 不用检查
-    if (url == "/api/user/login" || url == "/api/user/register" || url == "/api/upload" || /\/upload/.test(url)) {
+    if (url == "/api/user/login" || url == "/api/user/register" || url == "/api/upload" || /\/upload/.test(url) || /\/thumb/.test(url)) {
         await next()
     } else {
         // 规定token写在header 的 'autohrization' 
@@ -30,6 +29,7 @@ async function checkToken(ctx, next) {
                 await verify(token.split(" ")[1], SECRET_KEY)
                 await next()
             } catch (err) {
+                console.log(err,'token err')
                 //过期
                 ctx.body = {
                     data: null,

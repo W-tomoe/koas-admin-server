@@ -5,21 +5,22 @@
  */
 const { exec, escape } = require('../db/mysql')
 const { format } = require('silly-datetime')
-const newBlog = async(title, domText, plainText, showImg, userId) => {
+const newBlog = async(title, domText, plainText, showImg, thumbImg, userId) => {
     title =  escape(title)
     domText =  escape(domText)
     plainText = escape(plainText)
 
+    
+
     const userSql = `SELECT userName,avatar,email FROM users WHERE userId=${userId}`
     const userDate = await exec(userSql)
     const { userName, avatar, email } = userDate[0]
-
     
-    
-    const sql = `INSERT INTO blogs(title, showImg, plainText, domText, userId, userName, avatar, createTime)
-    VALUES(${title}, '${showImg}', ${plainText}, ${domText}, ${userId}, '${userName}', '${avatar}', '${createTime}')`
+    const sql = `INSERT INTO blogs(title, showImg, thumbImg, plainText, domText, userId, userName, avatar)
+    VALUES(${title}, '${showImg}', '${thumbImg}', ${plainText}, ${domText}, ${userId}, '${userName}', '${avatar}')`
 
     const rows = await exec(sql)
+
     
     if (rows.affectedRows > 0) {
         const updateACSql = `update users set articleCount=articleCount+'1' where userId=${userId}`
@@ -97,13 +98,13 @@ const getBlogDetailById = async (id) => {
 }
 
 const updateBlog = async (...updateInfo) => {
-    let [  blogId, title, domText, plainText, blogType, showImg ] = updateInfo
+    let [  blogId, title, domText, plainText, blogType, showImg, thumbImg ] = updateInfo
     title = escape(title)
     domText = escape(domText)
     plainText = escape(plainText)
 
     let sql = `
-        update blogs set title=${title}, domText=${domText}, plainText=${plainText}, showImg='${showImg}'  where blogId=${blogId}
+        update blogs set title=${title}, domText=${domText}, plainText=${plainText}, showImg='${showImg}', thumbImg='${thumbImg}'  where blogId=${blogId}
     `
 
     const rows = await exec(sql)

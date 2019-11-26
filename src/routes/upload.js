@@ -9,6 +9,8 @@ const fs = require('fs')
 const uuid = require('node-uuid')
 const mkdir= require('../utils/mkdir')
 const sillyDatetime = require('silly-datetime')
+const sharp = require('sharp')
+
 const {
     SuccessModel,
     ErrorModel
@@ -25,23 +27,37 @@ router.post('/api/upload', (ctx, next) => {
 
     mkdir(`../public/upload/${uploadTime}/`)
     //创建可读流
-    const reader = fs.createReadStream(file.path)
-    let filePath = path.join(__dirname, `../public/upload/${uploadTime}/`) + `/${uploadSuccessName}`
+    const readFileStream = fs.createReadStream(file.path)
+    let filePath =  path.join(__dirname, `../public/upload/${uploadTime}/`) + `/${uploadSuccessName}`
 
     // 创建可写流
-    const upStream = fs.createWriteStream(filePath)
+    const fileStream = fs.createWriteStream(filePath)
     
 
     // 可读流通过管道写入可写流
-    reader.pipe(upStream)
+    readFileStream.pipe(fileStream)
 
     let filePathData
-    const env = process.env.NODE_ENV
-    if(env === 'dev' ) {
+    if(process.env.NODE_ENV === 'dev' ) {
         filePathData = `http://localhost:8001/upload/${uploadTime}/${uploadSuccessName}`
     }else {
         filePathData = `http://localhost:8001/upload/${uploadTime}/${uploadSuccessName}`
     }
+
+
+    // 压缩图片
+    mkdir(`../public/thumb/${uploadTime}/`)
+    const thumbPath = path.join(__dirname, `../public/thumb/${uploadTime}/`) + `/thumb_${uploadSuccessName}`
+
+    
+
+    sharp(file.path).resize(100,100)
+        .toFile(thumbPath).then(data => {
+            console.log(data,'data')
+        }).catch(err => {
+            console.error(err)
+        })
+        
 
     const data = {
         fileUuid: uid,
@@ -49,6 +65,7 @@ router.post('/api/upload', (ctx, next) => {
         fileName: file.name,
         fileType: file.type,
         fileSize: file.size,
+        thumbImg: `http://localhost:8001/thumb/${uploadTime}/thumb_${uploadSuccessName}`,
         status: 'done'
     }
 
