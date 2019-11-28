@@ -11,7 +11,8 @@ const {
     login,
     getUserInfoById,
     updateUserInfo,
-    getUserList
+    getUserList,
+    updateAvatar
 } = require('../controller/users.js')
 
 const {
@@ -24,6 +25,8 @@ const {
 } = require('../utils/cryp')
 
 const jwt = require('jsonwebtoken')
+
+const writeStream = require('../utils/writeStream')
 
 router.prefix('/api/user')
 
@@ -115,6 +118,21 @@ router.post('/updateUserAvatar', async function(ctx, next ) {
 router.get('/userList', async (ctx, next) => {
     const userListData = await getUserList()
     ctx.body = new SuccessModel(userListData, '成功')
+})
+
+// 更新用户头像
+router.post('/updateAvatar',async (ctx, next) => {
+    const file = ctx.request.files.file
+    const userId = ctx.request.body.userId
+    const avatar = { filePath } = writeStream(file)
+
+    const data =  await updateAvatar(userId,filePath)
+
+    if(data) {
+        const userInfo = await getUserInfoById(userId)
+        return ctx.body = new SuccessModel(userInfo,'头像更新成功')
+    }
+    return ctx.body = new ErrorModel('头像更新失败')
 })
 
 module.exports = router

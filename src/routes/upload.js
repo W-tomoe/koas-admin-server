@@ -17,12 +17,13 @@ const {
 } = require('../model/resModel')
 
 
+const writeStream = require('../utils/writeStream')
+
 
 router.post('/api/upload', (ctx, next) => {
     const file = ctx.request.files.file
-
     const uid = uuid.v1()
-    const uploadSuccessName = uid + path.extname(file.name)
+    const uploadSuccessName = uid + (path.extname(file.name) || '.png')
     const uploadTime = sillyDatetime.format(new Date(), 'YYYY-MM-DD')
 
     mkdir(`../public/upload/${uploadTime}/`)
@@ -49,11 +50,9 @@ router.post('/api/upload', (ctx, next) => {
     mkdir(`../public/thumb/${uploadTime}/`)
     const thumbPath = path.join(__dirname, `../public/thumb/${uploadTime}/`) + `/thumb_${uploadSuccessName}`
 
-    
-
     sharp(file.path).resize(100,100)
         .toFile(thumbPath).then(data => {
-            console.log(data,'data')
+
         }).catch(err => {
             console.error(err)
         })
@@ -71,5 +70,7 @@ router.post('/api/upload', (ctx, next) => {
 
     return ctx.body = new SuccessModel(data,'上传成功')
 })
+
+
 
 module.exports = router

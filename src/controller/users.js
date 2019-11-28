@@ -2,7 +2,7 @@
  * @Description: 用户相关 controller
  * @Author: Wong
  * @Date: 2019-10-28 14:00:25
- * @LastEditTime: 2019-11-21 16:29:33
+ * @LastEditTime: 2019-11-28 16:35:51
  */
 
 const { exec, escape } = require('../db/mysql')
@@ -40,7 +40,7 @@ const login = async (username, password) => {
 
     password = escape(password)
     
-    const sql = `select userName, userId, email, avatar from users where userName=${username} or email=${username} and password=${password}`
+    const sql = `select userId, userName, userId, email, avatar, signature from users where userName=${username} or email=${username} and password=${password}`
     const rows = await exec(sql)
     return rows[0] || {}
 }
@@ -80,6 +80,17 @@ const getUserList = async () => {
     return rows || {}
 }
 
+const updateAvatar = async (userId,avatar) => {
+    
+    const sql = `update users u, blogs b set u.avatar='${avatar}',b.avatar='${avatar}' where u.userId=${userId} and b.userId=${userId}` 
+    
+    const updateData = await exec(sql)
+    if (updateData.affectedRows > 0) {
+        return true
+    }
+    return false
+}
+
 // 修改密码
 const changePassword = async (userId, oldPassword,newPassword) => {
     oldPassword = escape(oldPassword)
@@ -98,5 +109,6 @@ module.exports = {
     login,
     getUserInfoById,
     updateUserInfo,
-    getUserList
+    getUserList,
+    updateAvatar
 }

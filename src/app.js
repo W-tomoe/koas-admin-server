@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Wong
  * @Date: 2019-10-28 13:55:06
- * @LastEditTime: 2019-11-26 18:27:40
+ * @LastEditTime: 2019-11-28 14:52:13
  */
 const path = require('path')
 const fs = require('fs')
@@ -45,9 +45,9 @@ app.use(cors({
 }))
 
 // token检测
-// app.use(checkToken)
+app.use(checkToken)
 app.use(jwtKoa({secret:SECRET_KEY}).unless({
-    path: [ /\/login/, /\/register/, /\/upload/,/\/thumb/, /\/favicon.ico/]
+    path: [ /\/login/, /\/register/, /\/upload/,/\/thumb/, /\/favicon.ico/, /\/updateAvatar/]
 }))
 
 
