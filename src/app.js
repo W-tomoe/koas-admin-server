@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Wong
  * @Date: 2019-10-28 13:55:06
- * @LastEditTime: 2019-11-28 14:52:13
+ * @LastEditTime: 2019-12-05 11:34:35
  */
 const path = require('path')
 const fs = require('fs')
@@ -33,16 +33,16 @@ const upload = require('./routes/upload')
 onerror(app)
 
 // 启用cors
-app.use(cors({
-    origin:  function (ctx) {
-        return '*'
-    },
-    exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-    maxAge: 5,
-    credentials: true,
-    methods: ['GET', 'POST', 'DELETE'],
-    alloweHeaders: ['Conten-Type', 'Authorization', 'Accept']
-}))
+app.use(cors())
+    .use(koaBody({
+        multipart: true,
+        formidable: {
+            maxFileSize: 200 * 1024 * 1024,
+            onFileBegin: (name, file) => {
+                // console.log(`name: ${name}, file: ${JSON.stringify(file)}`)
+            }
+        }
+    }))
 
 // token检测
 app.use(checkToken)
@@ -52,25 +52,13 @@ app.use(jwtKoa({secret:SECRET_KEY}).unless({
 
 
 
-// 文件上传
-app.use(koaBody({
-    multipart: true,
-    formidable: {
-        maxFileSize: 200 * 1024 * 1024,
-        onFileBegin: (name, file) => {
-            // console.log(`name: ${name}, file: ${JSON.stringify(file)}`)
-        }
-    }
-}))
+
 
 
 
 app.use(staticFiles(path.join(__dirname , './public/')))
 
-// 中间件
-app.use(bodyparser({
-  enableTypes:['json', 'form', 'text']
-}))
+
 
 app.use(json())
 

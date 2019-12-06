@@ -2,7 +2,7 @@
  * @Description: 用户相关 controller
  * @Author: Wong
  * @Date: 2019-10-28 14:00:25
- * @LastEditTime: 2019-11-28 16:35:51
+ * @LastEditTime: 2019-12-04 14:51:15
  */
 
 const { exec, escape } = require('../db/mysql')
@@ -48,7 +48,7 @@ const login = async (username, password) => {
 
 const getUserInfoById = async (userId) => {
     const sql = `
-        select userId, userName, email, avatar, signature,isShield, articleCount, likeCount, commentCount, viewCount, createTime  from users where userId=${userId}
+        select userId, userName, email, avatar, signature, isDisable, articleCount, likeCount, commentCount, viewCount, createTime  from users where userId=${userId}
     `
     const rows = await exec(sql)
     return rows[0] || {}
@@ -75,14 +75,16 @@ const updateUserInfo = async (userInfo) => {
 }
 
 const getUserList = async () => {
-    const sql = `select userId, userName, avatar, signature, likeCount,email, commentCount, articleCount, viewCount, isShield from users`
+    const sql = `select userId, userName, avatar, signature, likeCount,email, commentCount, articleCount, viewCount, isDisable from users`
     const rows = await exec(sql)
     return rows || {}
 }
 
 const updateAvatar = async (userId,avatar) => {
     
-    const sql = `update users u, blogs b set u.avatar='${avatar}',b.avatar='${avatar}' where u.userId=${userId} and b.userId=${userId}` 
+    const sql = `
+        update users u, blogs b, comments c set u.avatar='${avatar}',b.avatar='${avatar}', c.avatar='${avatar}' where u.userId=${userId} and b.userId=${userId} and c.userId=${userId}
+    `  
     
     const updateData = await exec(sql)
     if (updateData.affectedRows > 0) {
