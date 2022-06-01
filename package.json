@@ -31,7 +31,7 @@
     "node-uuid": "^1.4.8",
     "pug": "^2.0.3",
     "sequelize": "^5.21.2",
-    "sharp": "^0.23.3",
+    "sharp": "^0.30.5",
     "silly-datetime": "^0.1.2",
     "xss": "^1.0.6"
   },
